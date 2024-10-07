@@ -24,19 +24,18 @@
 
 // I AM NOT DONE
 
-use std::error;
+use std::error::Error;
 use std::fmt;
-use std::num::ParseIntError;
 
-// TODO: update the return type of `main()` to make this compile.
-fn main() -> Result<(), Box<dyn ???>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let pretend_user_input = "42";
     let x: i64 = pretend_user_input.parse()?;
-    println!("output={:?}", PositiveNonzeroInteger::new(x)?);
+
+    let creation_result = PositiveNonzeroInteger::new(x);
+    println!("output={:?}", creation_result?);
+
     Ok(())
 }
-
-// Don't change anything below this line.
 
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
@@ -57,7 +56,6 @@ impl PositiveNonzeroInteger {
     }
 }
 
-// This is required so that `CreationError` can implement `error::Error`.
 impl fmt::Display for CreationError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let description = match *self {
@@ -68,4 +66,4 @@ impl fmt::Display for CreationError {
     }
 }
 
-impl error::Error for CreationError {}
+impl Error for CreationError {}

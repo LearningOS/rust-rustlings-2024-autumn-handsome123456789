@@ -10,13 +10,30 @@
 // hint.
 
 // I AM NOT DONE
+#[derive(Debug)]
+enum NametagError {
+    EmptyName,
+}
 
-pub fn generate_nametag_text(name: String) -> Option<String> {
+impl NametagError {
+    fn new() -> NametagError {
+        NametagError::EmptyName
+    }
+}
+
+impl std::fmt::Display for NametagError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            NametagError::EmptyName => write!(f, "`name` was empty; it must be nonempty."),
+        }
+    }
+}
+
+pub fn generate_nametag_text(name: String) -> Result<String, NametagError> {
     if name.is_empty() {
-        // Empty names aren't allowed.
-        None
+        Err(NametagError::EmptyName)
     } else {
-        Some(format!("Hi! My name is {}", name))
+        Ok(format!("Hi! My name is {}", name))
     }
 }
 

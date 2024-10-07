@@ -44,6 +44,27 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let parts: Vec<&str> = s.split(',').collect();
+        if parts.is_empty() {
+            return Person::default();
+        }
+
+        let name = parts[0].trim();
+        // 如果名字为空或者无法解析出有效的年龄，则返回默认的Person对象
+        let age = if parts.len() > 1 && parts[1].trim().is_empty() == false {
+            parts[1].trim().parse::<usize>().unwrap_or(30)
+        } else {
+            30
+        };
+
+        if name.is_empty() || (name == "John" && age == 30) {
+            Person::default()
+        } else {
+            Person {
+                name: name.to_string(),
+                age,
+            }
+        }
     }
 }
 
