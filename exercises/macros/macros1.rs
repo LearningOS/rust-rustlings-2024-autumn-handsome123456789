@@ -6,11 +6,11 @@
 // I AM NOT DONE
 
 macro_rules! my_macro {
-    () => {
-        println!("Check out my macro!");
+    ($input:expr) => {
+        println!("Check out my macro with input: {}", $input);
     };
 }
 
 fn main() {
-    my_macro();
+    my_macro!("Hello, Rust!");
 }
