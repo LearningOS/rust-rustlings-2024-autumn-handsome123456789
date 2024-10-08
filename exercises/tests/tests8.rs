@@ -9,17 +9,20 @@
 
 // I AM NOT DONE
 
+// tests8.rs
+
+
 fn main() {}
+
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_success() {
         #[cfg(feature = "pass")]
         return;
 
+        #[cfg(not(feature = "pass"))]
         panic!("no cfg set");
     }
 }

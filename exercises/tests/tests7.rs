@@ -36,19 +36,21 @@
 
 // I AM NOT DONE
 
-fn main() {}
+
+// tests7.rs
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::env;
+    use std::time::SystemTime;
 
     #[test]
     fn test_success() {
-        let timestamp = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
+        let timestamp = SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
             .unwrap()
             .as_secs();
-        let s = std::env::var("TEST_FOO").unwrap();
+        let s = env::var("TEST_FOO").unwrap();
         let e: u64 = s.parse().unwrap();
         assert!(timestamp >= e && timestamp < e + 10);
     }
