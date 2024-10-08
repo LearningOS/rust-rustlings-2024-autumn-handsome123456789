@@ -10,7 +10,9 @@
 fn slice_out_of_array() {
     let a = [1, 2, 3, 4, 5];
 
+    // 切片从索引 1 开始到索引 4 结束（不包括索引 4）
     let nice_slice = &a[1..4];
 
-    assert_eq!([2, 3, 4], nice_slice)
+    // 断言切片 nice_slice 包含元素 [2, 3, 4]
+    assert_eq!([2, 3, 4], nice_slice);
 }
