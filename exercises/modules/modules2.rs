@@ -10,9 +10,10 @@
 // I AM NOT DONE
 
 mod delicious_snacks {
-    // TODO: Fix these use statements
-    use self::fruits::PEAR as ???
-    use self::veggies::CUCUMBER as ???
+    // Bring `PEAR` into scope with a new name `fruit`
+    pub use self::fruits::PEAR as fruit;
+    // Bring `CUCUMBER` into scope with a new name `veggie`
+    pub use self::veggies::CUCUMBER as veggie;
 
     mod fruits {
         pub const PEAR: &'static str = "Pear";
