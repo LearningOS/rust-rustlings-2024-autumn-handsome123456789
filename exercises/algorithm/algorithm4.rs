@@ -37,20 +37,7 @@ where
         }
     }
 
-    // Insert a node into the tree
-    fn insert(&mut self, value: T) {
-        match value.cmp(&self.value) {
-            Ordering::Less => match self.left {
-                Some(ref mut left_child) => left_child.insert(value),
-                None => self.left = Some(Box::new(TreeNode::new(value))),
-            },
-            Ordering::Greater => match self.right {
-                Some(ref mut right_child) => right_child.insert(value),
-                None => self.right = Some(Box::new(TreeNode::new(value))),
-            },
-            Ordering::Equal => {} // Do nothing for duplicate values
-        }
-    }
+    
 }
 
 impl<T> BinarySearchTree<T>
@@ -63,26 +50,12 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        match self.root {
-            Some(ref mut node) => node.insert(value),
-            None => self.root = Some(Box::new(TreeNode::new(value))),
-        }
+        
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        let mut current = &self.root;
-        let mut found = false;
-
-        while let Some(node) = current {
-            match value.cmp(&node.value) {
-                Ordering::Less => current = &node.left,
-                Ordering::Greater => current = &node.right,
-                Ordering::Equal => found = true,
-            }
-        }
-
-        found
+        
     }
 }
 
