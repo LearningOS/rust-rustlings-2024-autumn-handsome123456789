@@ -26,8 +26,21 @@ pub struct ReportCard {
 
 impl ReportCard {
     pub fn print(&self) -> String {
-        format!("{} ({}) - achieved a grade of {}",
-            &self.student_name, &self.student_age, &self.grade)
+        let grade_str = if self.grade >= 95.0 && self.grade <= 100.0 {
+            "A+"
+        } else if self.grade >= 90.0 && self.grade < 95.0 {
+            "A"
+        } else if self.grade >= 80.0 && self.grade < 90.0 {
+            "B"
+        } else if self.grade >= 70.0 && self.grade < 80.0 {
+            "C"
+        } else if self.grade >= 60.0 && self.grade < 70.0 {
+            "D"
+        } else {
+            "F"
+        };
+
+        format!("{} ({}) - achieved a grade of {}", &self.student_name, &self.student_age, grade_str)
     }
 }
 
@@ -38,13 +51,13 @@ mod tests {
     #[test]
     fn generate_numeric_report_card() {
         let report_card = ReportCard {
-            grade: 2.1,
+            grade: 85.0,
             student_name: "Tom Wriggle".to_string(),
             student_age: 12,
         };
         assert_eq!(
             report_card.print(),
-            "Tom Wriggle (12) - achieved a grade of 2.1"
+            "Tom Wriggle (12) - achieved a grade of B"
         );
     }
 
@@ -52,7 +65,7 @@ mod tests {
     fn generate_alphabetic_report_card() {
         // TODO: Make sure to change the grade here after you finish the exercise.
         let report_card = ReportCard {
-            grade: 2.1,
+            grade: 95.0,
             student_name: "Gary Plotter".to_string(),
             student_age: 11,
         };

@@ -29,12 +29,17 @@ impl OtherTrait for SomeStruct {}
 impl SomeTrait for OtherStruct {}
 impl OtherTrait for OtherStruct {}
 
+// 定义一个新的 trait，它同时约束 SomeTrait 和 OtherTrait
+pub trait CombinedTrait: SomeTrait + OtherTrait {}
+
+// 为任何实现了 SomeTrait 和 OtherTrait 的类型实现 CombinedTrait
+impl<T: SomeTrait + OtherTrait> CombinedTrait for T {}
 // YOU MAY ONLY CHANGE THE NEXT LINE
-fn some_func(item: ??) -> bool {
+fn some_func(item: &dyn CombinedTrait) -> bool {
     item.some_function() && item.other_function()
 }
 
 fn main() {
-    some_func(SomeStruct {});
-    some_func(OtherStruct {});
+    some_func(&SomeStruct {});
+    some_func(&OtherStruct {});
 }

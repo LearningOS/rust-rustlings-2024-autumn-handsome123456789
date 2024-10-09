@@ -5,8 +5,8 @@
 
 
 fn main() {
-    let number = "T-H-R-E-E"; // don't change this line
+    let number = "T-H-R-E-E"; // 第一次声明
     println!("Spell a Number : {}", number);
-    let number = 3; // don't rename this variable
+    let number = 3; // // 第二次声明，隐藏了第一个 number
     println!("Number plus two is : {}", number + 2);
 }
