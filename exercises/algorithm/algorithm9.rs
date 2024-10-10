@@ -45,10 +45,6 @@ where
         (idx - 1) / 2
     }
 
-    fn children_present(&self, idx: usize) -> bool {
-        self.left_child_idx(idx) < self.count
-    }
-
     fn left_child_idx(&self, idx: usize) -> usize {
         idx * 2 + 1
     }
@@ -92,7 +88,7 @@ where
     fn sift_down(&mut self, mut idx: usize) {
         loop {
             let smallest_child_idx = self.smallest_child_idx(idx);
-            if smallest_child_idx == idx {
+            if idx == smallest_child_idx {
                 break;
             }
             if smallest_child_idx >= self.count {
@@ -115,11 +111,13 @@ where
             None
         } else {
             let result = self.items[0].clone(); // Clone the root element
-            self.items[0] = self.items[self.count - 1].clone(); // Move the last element to root
-            self.items.pop(); // Remove the last element
             self.count -= 1;
             if self.count > 0 {
-                self.sift_down(0);
+                self.items[0] = self.items[self.count].clone(); // Move the last element to root
+                self.items.pop(); // Remove the last element from the vector
+                self.sift_down(0); // Ensure the heap property is maintained
+            } else {
+                self.items.pop(); // Remove the last element if the heap is now empty
             }
             Some(result)
         }
@@ -165,6 +163,7 @@ mod tests {
         assert_eq!(heap.next(), Some(2));
         assert_eq!(heap.next(), Some(4));
         assert_eq!(heap.next(), Some(9));
+        assert_eq!(heap.next(), Some(11));
         heap.add(1);
         assert_eq!(heap.next(), Some(1));
     }
@@ -180,7 +179,8 @@ mod tests {
         assert_eq!(heap.next(), Some(11));
         assert_eq!(heap.next(), Some(9));
         assert_eq!(heap.next(), Some(4));
-        heap.add(1);
         assert_eq!(heap.next(), Some(2));
+        heap.add(1);
+        assert_eq!(heap.next(), Some(1));
     }
 }

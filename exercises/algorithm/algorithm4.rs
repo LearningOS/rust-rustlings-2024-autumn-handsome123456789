@@ -36,8 +36,6 @@ where
             right: None,
         }
     }
-
-    
 }
 
 impl<T> BinarySearchTree<T>
@@ -50,12 +48,41 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        
+        self.root = Some(Self::insert_recursive(self.root.take(), value));
+    }
+
+    fn insert_recursive(node: Option<Box<TreeNode<T>>>, value: T) -> Box<TreeNode<T>> {
+        match node {
+            Some(mut node) => {
+                match value.cmp(&node.value) {
+                    Ordering::Less => {
+                        node.left = Some(Self::insert_recursive(node.left.take(), value));
+                    }
+                    Ordering::Greater => {
+                        node.right = Some(Self::insert_recursive(node.right.take(), value));
+                    }
+                    Ordering::Equal => {}
+                }
+                node
+            }
+            None => Box::new(TreeNode::new(value)),
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        
+        Self::search_recursive(self.root.as_ref(), value)
+    }
+
+    fn search_recursive(node: Option<&Box<TreeNode<T>>>, value: T) -> bool {
+        match node {
+            Some(node) => match value.cmp(&node.value) {
+                Ordering::Less => Self::search_recursive(node.left.as_ref(), value),
+                Ordering::Greater => Self::search_recursive(node.right.as_ref(), value),
+                Ordering::Equal => true,
+            },
+            None => false,
+        }
     }
 }
 
