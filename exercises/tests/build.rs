@@ -12,7 +12,7 @@ fn main() {
     // 检查是否定义了 `pass` 特性
     if let Some(_) = env::var("CARGO_FEATURE_PASS").ok() {
         // 如果定义了 `pass` 特性，设置一个特殊的 cfg 标志
-        println!("cargo:rustc-cfg=pass");0
+        println!("cargo:rustc-cfg=pass");
         return;
     }
 
