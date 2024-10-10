@@ -1,14 +1,3 @@
-// from_str.rs
-//
-// This is similar to from_into.rs, but this time we'll implement `FromStr` and
-// return errors instead of falling back to a default value. Additionally, upon
-// implementing FromStr, you can use the `parse` method on strings to generate
-// an object of the implementor type. You can read more about it at
-// https://doc.rust-lang.org/std/str/trait.FromStr.html
-//
-// Execute `rustlings hint from_str` or use the `hint` watch subcommand for a
-// hint.
-
 use std::num::ParseIntError;
 use std::str::FromStr;
 
@@ -31,7 +20,6 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
