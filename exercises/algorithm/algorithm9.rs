@@ -1,12 +1,14 @@
 /*
-	heap
-	This question requires you to implement a binary heap function
+    heap
+    This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
+
+use std::cmp::Ord;
+use std::default::Default;
 
 pub struct Heap<T>
 where
-    T: Ord + Clone,
+    T: Default,
 {
     count: usize,
     items: Vec<T>,
@@ -15,12 +17,12 @@ where
 
 impl<T> Heap<T>
 where
-    T: Ord + Clone,
+    T: Default + Ord,
 {
     pub fn new(comparator: fn(&T, &T) -> bool) -> Self {
         Self {
             count: 0,
-            items: Vec::new(),
+            items: vec![T::default()], // 堆的第一个元素为空位
             comparator,
         }
     }
@@ -36,124 +38,110 @@ where
     pub fn add(&mut self, value: T) {
         self.items.push(value);
         self.count += 1;
-        self.heapify_up(self.count - 1);
+        self.bubble_up(self.count); // 上浮操作确保堆的性质
+    }
+
+    fn bubble_up(&mut self, mut idx: usize) {
+        while idx > 1 {
+            let parent_idx = self.parent_idx(idx);
+            if (self.comparator)(&self.items[idx], &self.items[parent_idx]) {
+                self.items.swap(idx, parent_idx);
+            }
+            idx = parent_idx;
+        }
+    }
+    
+
+    fn bubble_down(&mut self, mut idx: usize) {
+        while self.children_present(idx) {
+            let smallest_child = self.smallest_child_idx(idx);
+            if (self.comparator)(&self.items[smallest_child], &self.items[idx]) {
+                self.items.swap(idx, smallest_child);
+            }
+            idx = smallest_child;
+        }
+    }
+
+    pub fn next(&mut self) -> Option<T> {
+        if self.is_empty() {
+            None
+        } else {
+            // 移除堆顶元素，并将最后一个元素放置到堆顶，执行下沉操作
+            let result = self.items.swap_remove(1);
+            self.count -= 1;
+            if self.count > 0 {
+                self.bubble_down(1);
+            }
+            Some(result)
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
-        (idx - 1) / 2
+        idx / 2
     }
 
     fn left_child_idx(&self, idx: usize) -> usize {
-        idx * 2 + 1
+        idx * 2
     }
 
     fn right_child_idx(&self, idx: usize) -> usize {
-        idx * 2 + 2
+        self.left_child_idx(idx) + 1
     }
 
-    fn has_left_child(&self, idx: usize) -> bool {
-        self.left_child_idx(idx) < self.count
-    }
-
-    fn has_right_child(&self, idx: usize) -> bool {
-        self.right_child_idx(idx) < self.count
+    fn children_present(&self, idx: usize) -> bool {
+        self.left_child_idx(idx) <= self.count
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         let left = self.left_child_idx(idx);
         let right = self.right_child_idx(idx);
-        if left < self.count && right < self.count {
-            let left_val = &self.items[left];
-            let right_val = &self.items[right];
-            if (self.comparator)(left_val, right_val) {
-                left
-            } else {
-                right
-            }
-        } else if left < self.count {
+
+        if right > self.count {
             left
-        } else {
+        } else if (self.comparator)(&self.items[right], &self.items[left]) {
             right
-        }
-    }
-
-    fn heapify_up(&mut self, mut idx: usize) {
-        while idx > 0 {
-            let parent_idx = self.parent_idx(idx);
-            if self.items.get(parent_idx).map_or(false, |p| (self.comparator)(p, &self.items[idx])) {
-                self.items.swap(parent_idx, idx);
-                idx = parent_idx;
-            } else {
-                break;
-            }
-        }
-    }
-
-    fn heapify_down(&mut self, mut idx: usize) {
-        loop {
-            let smallest_child_idx = self.smallest_child_idx(idx);
-            if smallest_child_idx == idx {
-                break;
-            }
-            self.items.swap(idx, smallest_child_idx);
-            idx = smallest_child_idx;
-            if idx >= self.count {
-                break;
-            }
-        }
-    }
-
-    pub fn pop(&mut self) -> Option<T> {
-        if self.is_empty() {
-            None
         } else {
-            self.items.swap(0, self.count - 1);
-            let result = self.items.pop();
-            self.count -= 1;
-            if !self.is_empty() {
-                self.heapify_down(0);
-            }
-            result
+            left
         }
     }
+}
 
-    pub fn peek(&self) -> Option<&T> {
-        self.items.get(0)
+pub struct MinHeap;
+
+impl MinHeap {
+    #[allow(clippy::new_ret_no_self)]
+    pub fn new<T>() -> Heap<T>
+    where
+        T: Default + Ord,
+    {
+        Heap::new(|a, b| a < b)
     }
 }
 
-impl<T> Iterator for Heap<T>
-where
-    T: Ord + Clone,
-{
-    type Item = T;
+pub struct MaxHeap;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        self.pop()
+impl MaxHeap {
+    #[allow(clippy::new_ret_no_self)]
+    pub fn new<T>() -> Heap<T>
+    where
+        T: Default + Ord,
+    {
+        Heap::new(|a, b| a > b)
     }
-}
-
-pub fn new_min_heap<T: Ord + Clone>() -> Heap<T> {
-    Heap::new(|a, b| a < b)
-}
-
-pub fn new_max_heap<T: Ord + Clone>() -> Heap<T> {
-    Heap::new(|a, b| a > b)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn test_empty_heap() {
-        let mut heap = new_max_heap::<i32>();
+        let mut heap = MaxHeap::new::<i32>();
         assert_eq!(heap.next(), None);
     }
 
     #[test]
     fn test_min_heap() {
-        let mut heap = new_min_heap();
+        let mut heap = MinHeap::new();
         heap.add(4);
         heap.add(2);
         heap.add(9);
@@ -168,7 +156,7 @@ mod tests {
 
     #[test]
     fn test_max_heap() {
-        let mut heap = new_max_heap();
+        let mut heap = MaxHeap::new();
         heap.add(4);
         heap.add(2);
         heap.add(9);
