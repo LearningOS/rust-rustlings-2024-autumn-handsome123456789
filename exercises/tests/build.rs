@@ -9,12 +9,8 @@ use std::env;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 fn main() {
-    // 检查是否定义了 `pass` 特性
-    if let Some(_) = env::var("CARGO_FEATURE_PASS").ok() {
-        // 如果定义了 `pass` 特性，设置一个特殊的 cfg 标志
-        println!("cargo:rustc-cfg=pass");
-        return;
-    }
+     // 启用 "pass" feature，用于 tests8
+     println!("cargo:rustc-cfg=feature=\"pass\"");
 
     // 获取当前的 Unix 时间戳（秒为单位）
     let timestamp = match SystemTime::now().duration_since(UNIX_EPOCH) {

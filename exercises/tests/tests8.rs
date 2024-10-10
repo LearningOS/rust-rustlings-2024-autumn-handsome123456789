@@ -12,17 +12,14 @@
 // tests8.rs
 
 
-fn main() {}
-
-
 #[cfg(test)]
 mod tests {
     #[test]
     fn test_success() {
         #[cfg(feature = "pass")]
-        return;
+        return; // 如果定义了 `pass` 特性，测试直接通过
 
         #[cfg(not(feature = "pass"))]
-        panic!("no cfg set");
+        panic!("no cfg set"); // 如果没有定义 `pass` 特性，测试失败
     }
 }
